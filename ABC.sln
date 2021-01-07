@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.Infrastructure", "ABC.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.Tests", "ABC.Tests\ABC.Tests.csproj", "{E997D703-E605-4140-A468-38A8F1B0248F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.API", "ABC.API\ABC.API.csproj", "{676B23C6-62EC-4105-85D6-159468665CE6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{E997D703-E605-4140-A468-38A8F1B0248F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E997D703-E605-4140-A468-38A8F1B0248F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E997D703-E605-4140-A468-38A8F1B0248F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{676B23C6-62EC-4105-85D6-159468665CE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{676B23C6-62EC-4105-85D6-159468665CE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{676B23C6-62EC-4105-85D6-159468665CE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{676B23C6-62EC-4105-85D6-159468665CE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
