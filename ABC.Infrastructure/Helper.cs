@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace ABC.Core
+namespace ABC.Infrastructure
 {
     public static class Helper
     {
