@@ -2,7 +2,7 @@
 {
     public class BuyerInfo : ModelBase
     {
-        public Person buyer { get; set; }
-        public Unit unit { get; set; }
+        public Person Person { get; set; }
+        public Unit Unit { get; set; }
     }
 }
