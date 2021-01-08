@@ -129,7 +129,7 @@ namespace ABC.Infrastructure
 
                         return result;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         trans.Rollback();
                     }

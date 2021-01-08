@@ -5,7 +5,6 @@ namespace ABC.Core.Interfaces.Services
 {
     public interface IAmortizationScheduleService
     {
-        Task<AmortizationSchedule> BuildSchedule(BuyerInfo model);
-        Task<AmortizationSchedule> SaveSchedule(AmortizationSchedule model);
+        Task<Amortization> CreateSchedule(BuyerInfo buyerInfo);
     }
 }

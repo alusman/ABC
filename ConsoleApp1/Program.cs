@@ -1,5 +1,6 @@
 ﻿using ABC.Core.Models;
 using ABC.Infrastructure;
+using ABC.Services;
 using System;
 
 namespace ConsoleApp1
@@ -8,6 +9,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            //InsertAmortizationSet();
             //InsertAmortizationSchedule();
             //UpdateAmortizationSchedule();
             //GetAllAmortizationSchedule();
@@ -23,19 +25,46 @@ namespace ConsoleApp1
             Console.ReadLine();
         }
 
+        public async static void InsertAmortizationSet()
+        {
+            var Id = Guid.Parse("0B1F1A69-95FA-49E4-B1D0-96CE558715F7");
+            var PersonId = Guid.Parse("6A450C84-71C5-4BC7-8DC4-B15FC21D0326");
+            var UnitId = Guid.Parse("CEB434E6-A83F-416D-B0AF-9D61B5503006");
+
+            var buyerInfo = new BuyerInfo()
+            {
+                Id = Id,
+                PersonId = PersonId,
+                UnitId = UnitId,
+                Name = "John Doe",
+                Address = "Paranaque City",
+                ProjectName = "Mahogany",
+                CondoUnit = "701",
+                LoanAmount = 10000000.00M,
+                Term = 360,
+                StartOfPayment = DateTime.UtcNow.AddDays(2),
+                InterestRate = 10F
+            };
+
+            var repo = new AmortizationScheduleRepository();
+            var service = new AmortizationScheduleService(repo);
+
+            var result = await service.CreateSchedule(buyerInfo);
+
+            Console.WriteLine("Count: " + result.AmortizationSchedule.Count);
+        }
+
         public async static void InsertAmortizationSchedule()
         {
-            var buyerInfo = new BuyerInfo() { Id = Guid.Parse("D8D45F0E-A484-4735-A8A6-689287E5C285") };
             var schedule = new AmortizationSchedule()
             {
                 Date = DateTime.UtcNow,
                 Principal = 100000M,
-                Interest = 5.0F,
+                Interest = 5.0M,
                 Total = 1250000M,
                 Balance = 120000M,
                 LoanAmount = 1200000M,
                 NoOfDays = 10950,
-                BuyerInfo = buyerInfo
             };
 
             var repo = new AmortizationScheduleRepository();
@@ -46,18 +75,16 @@ namespace ConsoleApp1
 
         public async static void UpdateAmortizationSchedule()
         {
-            var buyerInfo = new BuyerInfo() { Id = Guid.Parse("D8D45F0E-A484-4735-A8A6-689287E5C285") };
             var schedule = new AmortizationSchedule()
             {
                 Id = Guid.Parse("CF3050EE-2487-4FB4-A5F3-4BD4E716AB05"),
                 Date = DateTime.UtcNow,
                 Principal = 100000M,
-                Interest = 8.0F,
+                Interest = 8.0M,
                 Total = 1250000M,
                 Balance = 120000M,
                 LoanAmount = 1200000M,
-                NoOfDays = 5475,
-                BuyerInfo = buyerInfo
+                NoOfDays = 5475
             };
 
             var repo = new AmortizationScheduleRepository();
@@ -81,7 +108,6 @@ namespace ConsoleApp1
                 Console.WriteLine(item.Balance);
                 Console.WriteLine(item.LoanAmount);
                 Console.WriteLine(item.NoOfDays);
-                Console.WriteLine(item.BuyerInfo);
                 Console.WriteLine("----------------------");
             }
         }
@@ -100,7 +126,6 @@ namespace ConsoleApp1
             Console.WriteLine(result.Balance);
             Console.WriteLine(result.LoanAmount);
             Console.WriteLine(result.NoOfDays);
-            Console.WriteLine(result.BuyerInfo);
         }
 
         public async static void DeleteAmortizationSchedule()
