@@ -6,10 +6,10 @@ namespace ABC.Core.Interfaces.Repositories
 {
     public interface IRepositoryBase<T>
     {
-        Task<List<T>> GetAll();
-        Task<T> GetById();
+        Task<IEnumerable<T>> GetAll();
+        Task<T> GetById(Guid id);
         Task<Guid> Insert(T model);
-        Task Update(T model);
-        Task<Boolean> Delete(T model);
+        Task<int> Update(T model);
+        Task<Boolean> Delete(Guid id);
     }
 }

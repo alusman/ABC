@@ -12,7 +12,7 @@ namespace ABC.Services
             throw new NotImplementedException();
         }
 
-        public Task<Guid> SaveBuyerInfo(BuyerInfo model)
+        public Task<BuyerInfo> SaveBuyerInfo(BuyerInfo model)
         {
             throw new NotImplementedException();
         }

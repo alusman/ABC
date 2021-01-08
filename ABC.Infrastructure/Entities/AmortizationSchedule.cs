@@ -1,16 +1,16 @@
-﻿using System;
+﻿using ABC.Core.Models;
+using System;
 
-namespace ABC.Core.Models
+namespace ABC.Infrastructure.Entities
 {
     public class AmortizationSchedule : ModelBase
     {
-        public DateTime Date { get; set; }
+        public Guid PersonUnitId { get; set; }
         public decimal Principal { get; set; }
         public float Interest { get; set; }
-        public decimal Total { get; set; }
-        public decimal Balance { get; set; }
         public decimal LoanAmount { get; set; }
         public int NoOfDays { get; set; }
-        public BuyerInfo Buyer { get; set; }
+        public decimal Total { get; set; }
+        public decimal Balance { get; set; }
     }
 }

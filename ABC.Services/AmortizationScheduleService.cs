@@ -11,5 +11,10 @@ namespace ABC.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<AmortizationSchedule> SaveSchedule(AmortizationSchedule model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

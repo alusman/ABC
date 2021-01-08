@@ -1,4 +1,6 @@
-﻿namespace ABC.Core.Models
+﻿using ABC.Core.Models;
+
+namespace ABC.Infrastructure.Entities
 {
     public class Person : ModelBase
     {

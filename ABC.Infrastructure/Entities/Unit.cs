@@ -1,6 +1,7 @@
-﻿using System;
+﻿using ABC.Core.Models;
+using System;
 
-namespace ABC.Core.Models
+namespace ABC.Infrastructure.Entities
 {
     public class Unit : ModelBase
     {

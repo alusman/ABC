@@ -2,46 +2,97 @@
 using System.Data;
 using ABC.Core.Interfaces.Repositories;
 using System.Threading.Tasks;
-using ABC.Core.Models;
 using System.Collections.Generic;
 using Dapper;
+using System.Linq;
+using ABC.Core.Models;
 
 namespace ABC.Infrastructure
 {
     public class AmortizationScheduleRepository : IAmortizationScheduleRepository
     {
-        // TODO: use the correct connection string
-        private const string CONNECTION_STRING = "";
+        private const string CONNECTION_STRING_NAME = "ABC";
         
-        public Task<List<AmortizationSchedule>> GetAll()
+        public async Task<IEnumerable<AmortizationSchedule>> GetAll()
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
+                var sql = "select * from AmortizationSchedule";
 
+                return await connection.QueryAsync<AmortizationSchedule>(sql).ConfigureAwait(false);
             }
-
-            // TODO: remove this once implemented
-            throw new NotImplementedException();
         }
 
-        public Task<AmortizationSchedule> GetById()
+        public async Task<AmortizationSchedule> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            {
+                var sql = "select * from AmortizationSchedule where Id = @Id";
+                
+                var param = new { Id = id };
+
+                var result = await connection.QueryAsync<AmortizationSchedule>(sql, param).ConfigureAwait(false);
+
+                return result.FirstOrDefault();
+            }
         }
 
-        public Task<Guid> Insert(AmortizationSchedule model)
+        public async Task<Guid> Insert(AmortizationSchedule model)
         {
-            throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            {
+                var sql = $"dbo.InsertAmortizationSchedule @PersonUnitId @Principal @Interest @LoanAmount @NoOfDays @Total @Balance";
+                
+                var param = new DynamicParameters();
+                param.Add("@PersonUnitId", model.Buyer.Id);
+                param.Add("@Principal", model.Principal);
+                param.Add("@Interest", model.Interest);
+                param.Add("@LoanAmount", model.LoanAmount);
+                param.Add("@NoOfDays", model.NoOfDays);
+                param.Add("@Total", model.Total);
+                param.Add("@Balance", model.Balance);
+                param.Add("@Id", null, DbType.Guid, ParameterDirection.Output);
+
+                await connection.ExecuteAsync(sql, param, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+
+                var result = param.Get<Guid>("@Id");
+
+                return result;
+            }
         }
 
-        public Task Update(AmortizationSchedule model)
+        public async Task<int> Update(AmortizationSchedule model)
         {
-            throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            {
+                var sql = $"dbo.UpdateAmortizationSchedule @Id @PersonUnitId @Principal @Interest @LoanAmount @NoOfDays @Total @Balance";
+                
+                var param = new DynamicParameters();
+                param.Add("@Id", model.Id);
+                param.Add("@PersonUnitId", model.Buyer.Id);
+                param.Add("@Principal", model.Principal);
+                param.Add("@Interest", model.Interest);
+                param.Add("@LoanAmount", model.LoanAmount);
+                param.Add("@NoOfDays", model.NoOfDays);
+                param.Add("@Total", model.Total);
+                param.Add("@Balance", model.Balance);
+
+                return await connection.ExecuteAsync(sql, param, commandType: CommandType.StoredProcedure).ConfigureAwait(false); // return rows affected
+            }
         }
 
-        public Task<bool> Delete(AmortizationSchedule model)
+        public async Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            {
+                var sql = "delete from AmortizationSchedule where Id = @Id";
+
+                var param = new { Id = id };
+
+                var result = await connection.ExecuteAsync(sql, param).ConfigureAwait(false);
+
+                return result > 0; // check if any row as been affected
+            }
         }
     }
 }
