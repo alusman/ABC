@@ -37,8 +37,15 @@ namespace ABC.Services
             return result;
         }
 
+        /// <summary>
+        /// Creates the actual amortization schedule for the given buyer info. Assumes that buyer info is already saved in the database.
+        /// </summary>
+        /// <param name="buyerInfo"></param>
+        /// <returns></returns>
         public async Task<Amortization> CreateSchedule(BuyerInfo buyerInfo)
         {
+            if (buyerInfo.Id == Guid.Empty) return null;
+
             var amortizationSchedule = BuildSchedule(buyerInfo);
 
             await _amortizationScheduleRepository.InsertSet(amortizationSchedule);

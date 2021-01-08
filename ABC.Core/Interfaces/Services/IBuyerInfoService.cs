@@ -7,6 +7,6 @@ namespace ABC.Core.Interfaces.Services
     public interface IBuyerInfoService
     {
         Task<BuyerInfo> GetBuyerInfoById(Guid id);
-        Task<BuyerInfo> SaveBuyerInfo(BuyerInfo model);
+        Task<Guid> SaveBuyerInfo(BuyerInfo model);
     }
 }

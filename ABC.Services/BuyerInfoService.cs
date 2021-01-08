@@ -1,4 +1,5 @@
-﻿using ABC.Core.Interfaces.Services;
+﻿using ABC.Core.Interfaces.Repositories;
+using ABC.Core.Interfaces.Services;
 using ABC.Core.Models;
 using System;
 using System.Threading.Tasks;
@@ -7,14 +8,22 @@ namespace ABC.Services
 {
     public class BuyerInfoService : IBuyerInfoService
     {
-        public Task<BuyerInfo> GetBuyerInfoById(Guid id)
+        private readonly IBuyerInfoRepository _buyerInfoRepository;
+
+        public BuyerInfoService(IBuyerInfoRepository buyerInfoRepository)
         {
-            throw new NotImplementedException();
+            if (buyerInfoRepository == null) throw new ArgumentNullException();
+            _buyerInfoRepository = buyerInfoRepository;
         }
 
-        public Task<BuyerInfo> SaveBuyerInfo(BuyerInfo model)
+        public async Task<BuyerInfo> GetBuyerInfoById(Guid id)
         {
-            throw new NotImplementedException();
+            return await _buyerInfoRepository.GetById(id).ConfigureAwait(false);
+        }
+
+        public async Task<Guid> SaveBuyerInfo(BuyerInfo model)
+        {
+            return await _buyerInfoRepository.Insert(model).ConfigureAwait(false);
         }
     }
 }
