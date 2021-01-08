@@ -41,7 +41,7 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"dbo.InsertAmortizationSchedule";
+                var sql = "dbo.InsertAmortizationSchedule";
                 
                 var param = new DynamicParameters();
                 param.Add("@PersonUnitId", model.BuyerInfo.Id);
@@ -65,7 +65,7 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"dbo.UpdateAmortizationSchedule";
+                var sql = "dbo.UpdateAmortizationSchedule";
                 
                 var param = new DynamicParameters();
                 param.Add("@Id", model.Id);

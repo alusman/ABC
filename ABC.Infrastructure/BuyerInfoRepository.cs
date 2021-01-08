@@ -82,7 +82,7 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"dbo.InsertPerson";
+                var sql = "dbo.InsertPerson";
 
                 var param = new DynamicParameters();
                 param.Add("@Name", model.Name);
@@ -143,7 +143,7 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"dbo.UpdatePerson";
+                var sql = "dbo.UpdatePerson";
 
                 var param = new DynamicParameters();
                 param.Add("@Id", model.PersonId);
