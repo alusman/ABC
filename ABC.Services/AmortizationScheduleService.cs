@@ -3,6 +3,7 @@ using ABC.Core.Interfaces.Services;
 using ABC.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ABC.Services
@@ -14,6 +15,26 @@ namespace ABC.Services
         {
             if (amortizationScheduleRepository == null) throw new ArgumentNullException();
             _amortizationScheduleRepository = amortizationScheduleRepository;
+        }
+
+        public async Task<List<AmortizationSchedule>> GetAmortizationScheduleByBuyerInfoId(Guid buyerInfoId)
+        {
+            var result = await _amortizationScheduleRepository.GetAmortizationScheduleByBuyerInfoId(buyerInfoId).ConfigureAwait(false);
+            if (result == null) return null;
+
+            return result.ToList();
+        }
+
+        public async Task<Amortization> GetAmortization(BuyerInfo buyerInfo)
+        {
+            var amortizationSchedule = await _amortizationScheduleRepository.GetAmortizationScheduleByBuyerInfoId(buyerInfo.Id).ConfigureAwait(false);
+            if (amortizationSchedule == null) return null;
+
+            var result = new Amortization();
+            result.BuyerInfo = buyerInfo;
+            result.AmortizationSchedule = amortizationSchedule.ToList();
+
+            return result;
         }
 
         public async Task<Amortization> CreateSchedule(BuyerInfo buyerInfo)

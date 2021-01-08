@@ -37,7 +37,7 @@ namespace ABC.Infrastructure
             }
         }
 
-        public async Task<IEnumerable<AmortizationSchedule>> GetByBuyerInfoId(Guid id)
+        public async Task<IEnumerable<AmortizationSchedule>> GetAmortizationScheduleByBuyerInfoId(Guid id)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {

@@ -2,6 +2,7 @@
 using ABC.Infrastructure;
 using ABC.Services;
 using System;
+using System.Linq;
 
 namespace ConsoleApp1
 {
@@ -14,6 +15,7 @@ namespace ConsoleApp1
             //UpdateAmortizationSchedule();
             //GetAllAmortizationSchedule();
             //GetAmortizationScheduleById();
+            //GetAmortizationScheduleByBuyerInfoId();
             //DeleteAmortizationSchedule();
 
             //InsertBuyerInfo();
@@ -126,6 +128,15 @@ namespace ConsoleApp1
             Console.WriteLine(result.Balance);
             Console.WriteLine(result.LoanAmount);
             Console.WriteLine(result.NoOfDays);
+        }
+
+        public async static void GetAmortizationScheduleByBuyerInfoId()
+        {
+            var id = Guid.Parse("0B1F1A69-95FA-49E4-B1D0-96CE558715F7");
+            var repo = new AmortizationScheduleRepository();
+            var result = await repo.GetAmortizationScheduleByBuyerInfoId(id);
+
+            Console.WriteLine(result.ToList().Count());
         }
 
         public async static void DeleteAmortizationSchedule()
