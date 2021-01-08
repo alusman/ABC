@@ -21,14 +21,24 @@ namespace ABC.Infrastructure
                             join PersonUnit b on a.Id = b.PersonId
                             join Unit c on b.UnitId = c.Id";
 
-                return await connection.QueryAsync<Entities.PersonUnit, Entities.Person, BuyerInfo, BuyerInfo>(sql,
-                    (personUnit, person, buyerInfo) => {
-                        buyerInfo.Id = personUnit.Id;
-                        buyerInfo.PersonId = person.Id;
-                        buyerInfo.Name = person.Name; 
-                        buyerInfo.Address = person.Address;
-                        buyerInfo.UnitId = personUnit.UnitId;
-                        return buyerInfo;
+                return await connection.QueryAsync<Entities.PersonUnit, Entities.Person, Entities.Unit, BuyerInfo>(sql,
+                    (personUnit, person, unit) => {
+                        var res = new BuyerInfo()
+                        {
+                            Id = personUnit.Id,
+                            PersonId = person.Id,
+                            Name = person.Name,
+                            Address = person.Address,
+                            UnitId = unit.Id,
+                            ProjectName = unit.ProjectName,
+                            CondoUnit = unit.CondoUnit,
+                            LoanAmount = unit.LoanAmount,
+                            Term = unit.Term,
+                            StartOfPayment = unit.StartOfPayment,
+                            InterestRate = unit.InterestRate
+                        };
+
+                        return res;
                     }).ConfigureAwait(false);
             }
         }
@@ -44,14 +54,24 @@ namespace ABC.Infrastructure
 
                 var param = new { Id = id };
 
-                var result = await connection.QueryAsync<Entities.PersonUnit, Entities.Person, BuyerInfo, BuyerInfo>(sql,
-                    (personUnit, person, buyerInfo) => {
-                        buyerInfo.Id = personUnit.Id;
-                        buyerInfo.PersonId = person.Id;
-                        buyerInfo.Name = person.Name;
-                        buyerInfo.Address = person.Address;
-                        buyerInfo.UnitId = personUnit.UnitId;
-                        return buyerInfo;
+                var result = await connection.QueryAsync<Entities.PersonUnit, Entities.Person, Entities.Unit, BuyerInfo>(sql,
+                    (personUnit, person, unit) => {
+                        var res = new BuyerInfo()
+                        {
+                            Id = personUnit.Id,
+                            PersonId = person.Id,
+                            Name = person.Name,
+                            Address = person.Address,
+                            UnitId = unit.Id,
+                            ProjectName = unit.ProjectName,
+                            CondoUnit = unit.CondoUnit,
+                            LoanAmount = unit.LoanAmount,
+                            Term = unit.Term,
+                            StartOfPayment = unit.StartOfPayment,
+                            InterestRate = unit.InterestRate
+                        };
+
+                        return res;
                     }, param).ConfigureAwait(false);
 
                 return result.FirstOrDefault();
@@ -62,14 +82,14 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"dbo.InsertPerson @Name @Address";
+                var sql = $"dbo.InsertPerson";
 
                 var param = new DynamicParameters();
                 param.Add("@Name", model.Name);
                 param.Add("@Address", model.Address);
                 param.Add("@Id", null, DbType.Guid, ParameterDirection.Output);
 
-                var sql2 = $"dbo.InsertUnit @ProjectName @CondoUnit @LoanAmount @Term @StartOfPayment @InterestRate";
+                var sql2 = $"dbo.InsertUnit";
 
                 var param2 = new DynamicParameters();
                 param2.Add("@ProjectName", model.ProjectName);
@@ -91,10 +111,10 @@ namespace ABC.Infrastructure
 
                         // insert Unit
                         await connection.ExecuteAsync(sql2, param2, trans, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-                        var unitId = param.Get<Guid>("@Id");
+                        var unitId = param2.Get<Guid>("@Id");
 
                         // setup PersonUnit
-                        var sql3 = $"dbo.InsertPersonUnit @PersonId @UnitId";
+                        var sql3 = $"dbo.InsertPersonUnit";
 
                         var param3 = new DynamicParameters();
                         param3.Add("@PersonId", personId);
@@ -103,13 +123,13 @@ namespace ABC.Infrastructure
 
                         // insert PersonUnit
                         await connection.ExecuteAsync(sql3, param3, trans, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-                        var result = param.Get<Guid>("@Id");
+                        var result = param3.Get<Guid>("@Id");
 
                         trans.Commit();
 
                         return result;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         trans.Rollback();
                     }
@@ -123,14 +143,14 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"dbo.UpdatePerson @Id @Name @Address";
+                var sql = $"dbo.UpdatePerson";
 
                 var param = new DynamicParameters();
                 param.Add("@Id", model.PersonId);
                 param.Add("@Name", model.Name);
                 param.Add("@Address", model.Address);
                 
-                var sql2 = $"dbo.UpdateUnit @Id @ProjectName @CondoUnit @LoanAmount @Term @StartOfPayment @InterestRate";
+                var sql2 = $"dbo.UpdateUnit";
 
                 var param2 = new DynamicParameters();
                 param2.Add("@Id", model.UnitId);
@@ -140,15 +160,7 @@ namespace ABC.Infrastructure
                 param2.Add("@Term", model.Term);
                 param2.Add("@StartOfPayment", model.StartOfPayment);
                 param2.Add("@InterestRate", model.InterestRate);
-
-                var sql3 = $"dbo.UpdatePersonUnit @PersonId @UnitId";
-
-                var param3 = new DynamicParameters();
-                param3.Add("@Id", model.Id);
-                param3.Add("@PersonId", model.PersonId);
-                param3.Add("@UnitId", model.UnitId);
-                
-
+                               
                 connection.Open();
                 using (var trans = connection.BeginTransaction())
                 {
@@ -157,8 +169,6 @@ namespace ABC.Infrastructure
                         await connection.ExecuteAsync(sql, param, trans, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                         await connection.ExecuteAsync(sql2, param2, trans, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-
-                        await connection.ExecuteAsync(sql3, param3, trans, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                         trans.Commit();
 

@@ -41,10 +41,10 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"dbo.InsertAmortizationSchedule @PersonUnitId @Principal @Interest @LoanAmount @NoOfDays @Total @Balance";
+                var sql = $"dbo.InsertAmortizationSchedule";
                 
                 var param = new DynamicParameters();
-                param.Add("@PersonUnitId", model.Buyer.Id);
+                param.Add("@PersonUnitId", model.BuyerInfo.Id);
                 param.Add("@Principal", model.Principal);
                 param.Add("@Interest", model.Interest);
                 param.Add("@LoanAmount", model.LoanAmount);
@@ -65,11 +65,11 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"dbo.UpdateAmortizationSchedule @Id @PersonUnitId @Principal @Interest @LoanAmount @NoOfDays @Total @Balance";
+                var sql = $"dbo.UpdateAmortizationSchedule";
                 
                 var param = new DynamicParameters();
                 param.Add("@Id", model.Id);
-                param.Add("@PersonUnitId", model.Buyer.Id);
+                param.Add("@PersonUnitId", model.BuyerInfo.Id);
                 param.Add("@Principal", model.Principal);
                 param.Add("@Interest", model.Interest);
                 param.Add("@LoanAmount", model.LoanAmount);

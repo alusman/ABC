@@ -11,6 +11,6 @@ namespace ABC.Core.Models
         public decimal Balance { get; set; }
         public decimal LoanAmount { get; set; }
         public int NoOfDays { get; set; }
-        public BuyerInfo Buyer { get; set; }
+        public BuyerInfo BuyerInfo { get; set; }
     }
 }
