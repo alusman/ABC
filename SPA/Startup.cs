@@ -31,6 +31,8 @@ namespace SPA
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddSwaggerGen();
+
             services.AddTransient<IAmortizationScheduleRepository, AmortizationScheduleRepository>();
             services.AddTransient<IBuyerInfoRepository, BuyerInfoRepository>();
             services.AddTransient<IAmortizationScheduleService, AmortizationScheduleService>();
@@ -45,6 +47,13 @@ namespace SPA
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseSwagger();
+
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("v1/swagger.json", "ABC API V1");
+                });
             }
             else
             {
