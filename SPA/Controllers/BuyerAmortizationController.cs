@@ -1,5 +1,4 @@
-﻿using ABC.Core.Interfaces.Services;
-using ABC.Core.Models;
+﻿using ABC.Core.Models;
 using ABC.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -70,7 +69,7 @@ namespace API.Controllers
         [HttpPost("savebuyerinfo", Name = "InsertBuyerInfo")]
         [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> SaveBuyerInfo([FromBody] BuyerInfo model)
+        public async Task<IActionResult> SaveBuyerInfo([FromBody]BuyerInfo model)
         {
             var result = await _service.SaveBuyerInfo(model).ConfigureAwait(false);
             if (result == null) return BadRequest();
@@ -85,7 +84,7 @@ namespace API.Controllers
         [HttpPut("updatebuyerinfo", Name = "UpdateBuyerInfo")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateBuyerInfo([FromBody] BuyerInfo model)
+        public async Task<IActionResult> UpdateBuyerInfo([FromBody]BuyerInfo model)
         {
             var result = await _service.UpdateBuyerInfo(model).ConfigureAwait(false);
 
@@ -114,7 +113,7 @@ namespace API.Controllers
         [HttpPost("createschedule", Name = "BuildAmortizationSchedule")]
         [ProducesResponseType(typeof(IEnumerable<AmortizationSchedule>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateAmortizationSchedule([FromBody] BuyerInfo model)
+        public async Task<IActionResult> CreateAmortizationSchedule([FromBody]BuyerInfo model)
         {
             var result = await _service.CreateAmortizationSchedule(model).ConfigureAwait(false);
             if (result == null) return BadRequest();
