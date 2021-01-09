@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.API", "API\ABC.API.cspr
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ABC.Database", "ABC\ABC.Database.sqlproj", "{1F1F48D7-150E-4D3E-9C9D-2D1683385AFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPA", "SPA\SPA.csproj", "{374D0620-C7EC-4201-8AB3-25409651381E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{1F1F48D7-150E-4D3E-9C9D-2D1683385AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F1F48D7-150E-4D3E-9C9D-2D1683385AFA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F1F48D7-150E-4D3E-9C9D-2D1683385AFA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{374D0620-C7EC-4201-8AB3-25409651381E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{374D0620-C7EC-4201-8AB3-25409651381E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{374D0620-C7EC-4201-8AB3-25409651381E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{374D0620-C7EC-4201-8AB3-25409651381E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
