@@ -1,5 +1,6 @@
 ﻿using ABC.Core.Interfaces.Services;
 using ABC.Core.Models;
+using ABC.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,13 +13,8 @@ namespace API.Controllers
     [Route("[controller]")]
     public class BuyerAmortizationController : Controller
     {
-        private readonly IBuyerInfoService _buyerInfoService;
-        private readonly IAmortizationScheduleService _amortizationScheduleService;
-        public BuyerAmortizationController(IBuyerInfoService buyerInfoService, IAmortizationScheduleService amortizationScheduleService)
-        {
-            _buyerInfoService = buyerInfoService ?? throw new ArgumentNullException($"{nameof(buyerInfoService)} is required");
-            _amortizationScheduleService = amortizationScheduleService ?? throw new ArgumentNullException($"{nameof(amortizationScheduleService)} is required");
-        }
+        private readonly IBuyerAmortizationService _service;
+        public BuyerAmortizationController(IBuyerAmortizationService service)  => _service = service ?? throw new ArgumentNullException($"{nameof(service)} is required");
 
         /// <summary>
         /// Gets the list of buyer info and unit
@@ -29,7 +25,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAllBuyerInfo()
         {
-            var result = await _buyerInfoService.GetAllBuyerInfo().ConfigureAwait(false);
+            var result = await _service.GetAllBuyerInfo().ConfigureAwait(false);
             if (result == null) return NotFound();
 
             return Ok(result);
@@ -45,7 +41,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetBuyerInfo(Guid id)
         {
-            var result = await _buyerInfoService.GetBuyerInfoById(id).ConfigureAwait(false);
+            var result = await _service.GetBuyerInfoById(id).ConfigureAwait(false);
             if (result == null) return NotFound();
 
             return Ok(result);
@@ -61,7 +57,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetSchedule(Guid id)
         {
-            var result = await _amortizationScheduleService.GetAmortizationScheduleByBuyerInfoId(id).ConfigureAwait(false);
+            var result = await _service.GetAmortizationScheduleByBuyerInfoId(id).ConfigureAwait(false);
             if (result == null) return NotFound();
 
             return Ok(result);
@@ -76,7 +72,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SaveBuyerInfo([FromBody] BuyerInfo model)
         {
-            var result = await _buyerInfoService.SaveBuyerInfo(model).ConfigureAwait(false);
+            var result = await _service.SaveBuyerInfo(model).ConfigureAwait(false);
             if (result == null) return BadRequest();
 
             return Ok(result);
@@ -91,7 +87,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateBuyerInfo([FromBody] BuyerInfo model)
         {
-            var result = await _buyerInfoService.UpdateBuyerInfo(model).ConfigureAwait(false);
+            var result = await _service.UpdateBuyerInfo(model).ConfigureAwait(false);
 
             return Ok(result);
         }
@@ -106,8 +102,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteBuyerInfo(Guid id)
         {
-            await _amortizationScheduleService.DeleteSchedule(id).ConfigureAwait(false);
-            await _buyerInfoService.DeleteBuyerInfo(id).ConfigureAwait(false);
+            await _service.DeleteBuyerInfo(id).ConfigureAwait(false);
             
             return Ok();
         }
@@ -121,17 +116,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateAmortizationSchedule([FromBody] BuyerInfo model)
         {
-            var buyerInfoId = model.Id;
-
-            if (buyerInfoId == Guid.Empty)
-            {
-                buyerInfoId = await _buyerInfoService.SaveBuyerInfo(model).ConfigureAwait(false);
-                if (buyerInfoId == null) return BadRequest();
-
-                model.Id = buyerInfoId;
-            }
-                
-            var result = await _amortizationScheduleService.CreateSchedule(model).ConfigureAwait(false);
+            var result = await _service.CreateAmortizationSchedule(model).ConfigureAwait(false);
             if (result == null) return BadRequest();
 
             return Ok(result);
@@ -147,7 +132,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteAmortizationSchedule(Guid id)
         {
-            await _amortizationScheduleService.DeleteSchedule(id).ConfigureAwait(false);
+            await _service.DeleteAmortizationSchedule(id).ConfigureAwait(false);
 
             return Ok();
         }

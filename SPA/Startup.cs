@@ -2,6 +2,7 @@ using ABC.Core.Interfaces.Repositories;
 using ABC.Core.Interfaces.Services;
 using ABC.Infrastructure;
 using ABC.Services;
+using ABC.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -37,6 +38,7 @@ namespace SPA
             services.AddTransient<IBuyerInfoRepository, BuyerInfoRepository>();
             services.AddTransient<IAmortizationScheduleService, AmortizationScheduleService>();
             services.AddTransient<IBuyerInfoService, BuyerInfoService>();
+            services.AddTransient<IBuyerAmortizationService, BuyerAmortizationService>();
 
             services.Configure<ConnectionOptions>(Configuration.GetSection(ConnectionOptions.ConnectionStrings));
         }
