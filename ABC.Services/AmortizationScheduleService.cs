@@ -17,7 +17,7 @@ namespace ABC.Services
             _amortizationScheduleRepository = amortizationScheduleRepository;
         }
 
-        public async Task<List<AmortizationSchedule>> GetAmortizationScheduleByBuyerInfoId(Guid buyerInfoId)
+        public async Task<IEnumerable<AmortizationSchedule>> GetAmortizationScheduleByBuyerInfoId(Guid buyerInfoId)
         {
             var result = await _amortizationScheduleRepository.GetAmortizationScheduleByBuyerInfoId(buyerInfoId).ConfigureAwait(false);
             if (result == null) return null;
@@ -25,24 +25,7 @@ namespace ABC.Services
             return result.ToList();
         }
 
-        public async Task<Amortization> GetAmortization(BuyerInfo buyerInfo)
-        {
-            var amortizationSchedule = await _amortizationScheduleRepository.GetAmortizationScheduleByBuyerInfoId(buyerInfo.Id).ConfigureAwait(false);
-            if (amortizationSchedule == null) return null;
-
-            var result = new Amortization();
-            result.BuyerInfo = buyerInfo;
-            result.AmortizationSchedule = amortizationSchedule.ToList();
-
-            return result;
-        }
-
-        /// <summary>
-        /// Creates the actual amortization schedule for the given buyer info. Assumes that buyer info is already saved in the database.
-        /// </summary>
-        /// <param name="buyerInfo"></param>
-        /// <returns></returns>
-        public async Task<Amortization> CreateSchedule(BuyerInfo buyerInfo)
+        public async Task<IEnumerable<AmortizationSchedule>> CreateSchedule(BuyerInfo buyerInfo)
         {
             if (buyerInfo.Id == Guid.Empty) return null;
 
@@ -50,12 +33,10 @@ namespace ABC.Services
 
             await _amortizationScheduleRepository.InsertSet(amortizationSchedule);
 
-            var result = new Amortization();
-            result.BuyerInfo = buyerInfo;
-            result.AmortizationSchedule = amortizationSchedule;
-
-            return result;
+            return amortizationSchedule;
         }
+
+        public async Task<bool> DeleteSchedule(Guid buyerInfoId) => await _amortizationScheduleRepository.DeleteByBuyerInfoId(buyerInfoId).ConfigureAwait(false);
 
         private List<AmortizationSchedule> BuildSchedule(BuyerInfo model)
         {

@@ -4,7 +4,7 @@ namespace ABC.Core.Models
 {
     public class AmortizationSchedule : ModelBase
     {
-        public Guid PersonUnitId { get; set; }
+        public Guid PersonUnitId { get; set; } // BuyerInfoId
         public DateTime Date { get; set; }
         public decimal Principal { get; set; }
         public decimal Interest { get; set; }

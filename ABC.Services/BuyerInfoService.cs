@@ -2,6 +2,7 @@
 using ABC.Core.Interfaces.Services;
 using ABC.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ABC.Services
@@ -16,14 +17,14 @@ namespace ABC.Services
             _buyerInfoRepository = buyerInfoRepository;
         }
 
-        public async Task<BuyerInfo> GetBuyerInfoById(Guid id)
-        {
-            return await _buyerInfoRepository.GetById(id).ConfigureAwait(false);
-        }
+        public async Task<IEnumerable<BuyerInfo>> GetAllBuyerInfo() => await _buyerInfoRepository.GetAll().ConfigureAwait(false);
 
-        public async Task<Guid> SaveBuyerInfo(BuyerInfo model)
-        {
-            return await _buyerInfoRepository.Insert(model).ConfigureAwait(false);
-        }
+        public async Task<BuyerInfo> GetBuyerInfoById(Guid id) => await _buyerInfoRepository.GetById(id).ConfigureAwait(false);
+
+        public async Task<Guid> SaveBuyerInfo(BuyerInfo model) => await _buyerInfoRepository.Insert(model).ConfigureAwait(false);
+
+        public async Task<int> UpdateBuyerInfo(BuyerInfo model) => await _buyerInfoRepository.Update(model).ConfigureAwait(false);
+
+        public async Task<bool> DeleteBuyerInfo(Guid id) => await _buyerInfoRepository.Delete(id).ConfigureAwait(false);
     }
 }

@@ -7,8 +7,8 @@ namespace ABC.Core.Interfaces.Services
 {
     public interface IAmortizationScheduleService
     {
-        Task<List<AmortizationSchedule>> GetAmortizationScheduleByBuyerInfoId(Guid buyerInfoId);
-        Task<Amortization> CreateSchedule(BuyerInfo buyerInfo);
-        Task<Amortization> GetAmortization(BuyerInfo buyerInfo);
+        Task<IEnumerable<AmortizationSchedule>> GetAmortizationScheduleByBuyerInfoId(Guid buyerInfoId);
+        Task<IEnumerable<AmortizationSchedule>> CreateSchedule(BuyerInfo buyerInfo);
+        Task<bool> DeleteSchedule(Guid buyerInfoId);
     }
 }

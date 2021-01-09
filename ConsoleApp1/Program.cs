@@ -10,13 +10,9 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            //InsertAmortizationSet();
-            //InsertAmortizationSchedule();
-            //UpdateAmortizationSchedule();
-            //GetAllAmortizationSchedule();
-            //GetAmortizationScheduleById();
+            //InsertAmortizationSet();;
             //GetAmortizationScheduleByBuyerInfoId();
-            //DeleteAmortizationSchedule();
+            //DeleteAmortizationScheduleByBuyerInfoId();
 
             //InsertBuyerInfo();
             //UpdateBuyerInfo();
@@ -29,9 +25,9 @@ namespace ConsoleApp1
 
         public async static void InsertAmortizationSet()
         {
-            var Id = Guid.Parse("0B1F1A69-95FA-49E4-B1D0-96CE558715F7");
-            var PersonId = Guid.Parse("6A450C84-71C5-4BC7-8DC4-B15FC21D0326");
-            var UnitId = Guid.Parse("CEB434E6-A83F-416D-B0AF-9D61B5503006");
+            var Id = Guid.Parse("A8289560-E9E0-48EB-9F45-FBD15B643CE7");
+            var PersonId = Guid.Parse("52748B8C-AB89-41C0-BFA6-CE054829292F");
+            var UnitId = Guid.Parse("5F507243-2246-4ADD-B547-BA93C807FC8D");
 
             var buyerInfo = new BuyerInfo()
             {
@@ -43,7 +39,7 @@ namespace ConsoleApp1
                 ProjectName = "Mahogany",
                 CondoUnit = "701",
                 LoanAmount = 10000000.00M,
-                Term = 360,
+                Term = 1000,
                 StartOfPayment = DateTime.UtcNow.AddDays(2),
                 InterestRate = 10F
             };
@@ -53,97 +49,23 @@ namespace ConsoleApp1
 
             var result = await service.CreateSchedule(buyerInfo);
 
-            Console.WriteLine("Count: " + result.AmortizationSchedule.Count);
-        }
-
-        public async static void InsertAmortizationSchedule()
-        {
-            var schedule = new AmortizationSchedule()
-            {
-                Date = DateTime.UtcNow,
-                Principal = 100000M,
-                Interest = 5.0M,
-                Total = 1250000M,
-                Balance = 120000M,
-                LoanAmount = 1200000M,
-                NoOfDays = 10950,
-            };
-
-            var repo = new AmortizationScheduleRepository();
-            var result = await repo.Insert(schedule);
-
-            Console.WriteLine(result);
-        }
-
-        public async static void UpdateAmortizationSchedule()
-        {
-            var schedule = new AmortizationSchedule()
-            {
-                Id = Guid.Parse("CF3050EE-2487-4FB4-A5F3-4BD4E716AB05"),
-                Date = DateTime.UtcNow,
-                Principal = 100000M,
-                Interest = 8.0M,
-                Total = 1250000M,
-                Balance = 120000M,
-                LoanAmount = 1200000M,
-                NoOfDays = 5475
-            };
-
-            var repo = new AmortizationScheduleRepository();
-            var result = await repo.Update(schedule);
-
-            Console.WriteLine(result);
-        }
-
-        public async static void GetAllAmortizationSchedule()
-        {
-            var repo = new AmortizationScheduleRepository();
-            var result = await repo.GetAll();
-
-            foreach (var item in result)
-            {
-                Console.WriteLine(item.Id);
-                Console.WriteLine(item.Date);
-                Console.WriteLine(item.Principal);
-                Console.WriteLine(item.Interest);
-                Console.WriteLine(item.Total);
-                Console.WriteLine(item.Balance);
-                Console.WriteLine(item.LoanAmount);
-                Console.WriteLine(item.NoOfDays);
-                Console.WriteLine("----------------------");
-            }
-        }
-
-        public async static void GetAmortizationScheduleById()
-        {
-            var id = Guid.Parse("CF3050EE-2487-4FB4-A5F3-4BD4E716AB05");
-            var repo = new AmortizationScheduleRepository();
-            var result = await repo.GetById(id);
-
-            Console.WriteLine(result.Id);
-            Console.WriteLine(result.Date);
-            Console.WriteLine(result.Principal);
-            Console.WriteLine(result.Interest);
-            Console.WriteLine(result.Total);
-            Console.WriteLine(result.Balance);
-            Console.WriteLine(result.LoanAmount);
-            Console.WriteLine(result.NoOfDays);
+            Console.WriteLine("Count: " + result.ToList().Count);
         }
 
         public async static void GetAmortizationScheduleByBuyerInfoId()
         {
-            var id = Guid.Parse("0B1F1A69-95FA-49E4-B1D0-96CE558715F7");
+            var Id = Guid.Parse("A8289560-E9E0-48EB-9F45-FBD15B643CE7");
             var repo = new AmortizationScheduleRepository();
-            var result = await repo.GetAmortizationScheduleByBuyerInfoId(id);
+            var result = await repo.GetAmortizationScheduleByBuyerInfoId(Id);
 
             Console.WriteLine(result.ToList().Count());
         }
 
-        public async static void DeleteAmortizationSchedule()
+        public async static void DeleteAmortizationScheduleByBuyerInfoId()
         {
-            var id = Guid.Parse("BD6A6A50-46B8-4C95-B019-D2C449520C1C");
+            var Id = Guid.Parse("A8289560-E9E0-48EB-9F45-FBD15B643CE7");
             var repo = new AmortizationScheduleRepository();
-            var result = await repo.Delete(id);
+            var result = await repo.DeleteByBuyerInfoId(Id);
             Console.WriteLine(result);
         }
 
@@ -168,9 +90,9 @@ namespace ConsoleApp1
 
         public async static void UpdateBuyerInfo()
         {
-            var Id = Guid.Parse("0B1F1A69-95FA-49E4-B1D0-96CE558715F7");
-            var PersonId = Guid.Parse("6A450C84-71C5-4BC7-8DC4-B15FC21D0326");
-            var UnitId = Guid.Parse("CEB434E6-A83F-416D-B0AF-9D61B5503006");
+            var Id = Guid.Parse("A8289560-E9E0-48EB-9F45-FBD15B643CE7");
+            var PersonId = Guid.Parse("52748B8C-AB89-41C0-BFA6-CE054829292F");
+            var UnitId = Guid.Parse("5F507243-2246-4ADD-B547-BA93C807FC8D");
 
             var buyerInfo = new BuyerInfo()
             {
@@ -182,7 +104,7 @@ namespace ConsoleApp1
                 ProjectName = "Rapsody",
                 CondoUnit = "701",
                 LoanAmount = 5000000.00M,
-                Term = 30,
+                Term = 10000,
                 StartOfPayment = DateTime.UtcNow,
                 InterestRate = 9.5F
             };
@@ -216,9 +138,9 @@ namespace ConsoleApp1
 
         public async static void GetBuyerInfoById()
         {
-            var id = Guid.Parse("D8D45F0E-A484-4735-A8A6-689287E5C285");
+            var Id = Guid.Parse("A8289560-E9E0-48EB-9F45-FBD15B643CE7");
             var repo = new BuyerInfoRepository();
-            var res = await repo.GetById(id);
+            var res = await repo.GetById(Id);
 
             Console.WriteLine(res.Id);
             Console.WriteLine(res.PersonId);
@@ -234,7 +156,7 @@ namespace ConsoleApp1
 
         public async static void DeleteBuyerInfo()
         {
-            var id = Guid.Parse("D8D45F0E-A484-4735-A8A6-689287E5C285");
+            var id = Guid.Parse("0B1F1A69-95FA-49E4-B1D0-96CE558715F7");
             var repo = new BuyerInfoRepository();
             var result = await repo.Delete(id);
             Console.WriteLine(result);

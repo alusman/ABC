@@ -171,32 +171,51 @@ namespace ABC.Infrastructure
                         await connection.ExecuteAsync(sql2, param2, trans, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                         trans.Commit();
-
-                        return 1;
                     }
                     catch (Exception)
                     {
                         trans.Rollback();
+                        return 0;
                     }
                 }
 
-                return 0;
+                return 1;
             }
         }
 
         public async Task<bool> Delete(Guid id)
         {
-            // also delete Person and Unit here or do it on the service level after executing this?
-            // deletion of Person and Unit not yet implemented anywhere
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
             {
-                var sql = $"delete from dbo.PersonUnit where Id = @Id";
-
+                var query = $"select * from dbo.PersonUnit where Id = @Id";
                 var param = new { Id = id };
 
-                var result = await connection.ExecuteAsync(sql, param).ConfigureAwait(false);
+                connection.Open();
+                using (var trans = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        var buyerInfo = await connection.QueryAsync<Entities.PersonUnit>(query, param, trans).ConfigureAwait(false);
+                        var toBeDeleted = buyerInfo.FirstOrDefault();
 
-                return result > 0;
+                        var sql = $@"delete from dbo.PersonUnit where Id = @Id;
+                                     delete from dbo.Person where Id = @PersonId;
+                                     delete from dbo.Unit where Id = @UnitId";
+
+                        var ids = new { Id = id, PersonId = toBeDeleted.PersonId, UnitId = toBeDeleted.UnitId };
+
+                        var result = await connection.ExecuteAsync(sql, ids, trans).ConfigureAwait(false);
+
+                        trans.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        return false;
+                    }
+                }
+
+                return true;
             }
         }
     }
