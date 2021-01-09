@@ -4,18 +4,23 @@ using ABC.Core.Interfaces.Repositories;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Dapper;
-using System.Linq;
 using ABC.Core.Models;
+using Microsoft.Extensions.Options;
 
 namespace ABC.Infrastructure
 {
     public class AmortizationScheduleRepository : IAmortizationScheduleRepository
     {
-        private const string CONNECTION_STRING_NAME = "ABC";
-        
+        private readonly IOptions<ConnectionOptions> _options;
+
+        public AmortizationScheduleRepository(IOptions<ConnectionOptions> options)
+        {
+            _options = options ?? throw new ArgumentNullException($"{nameof(options)} is required");
+        }
+
         public async Task<IEnumerable<AmortizationSchedule>> GetAmortizationScheduleByBuyerInfoId(Guid id)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
                 var sql = "select * from AmortizationSchedule where PersonUnitId = @Id";
 
@@ -27,7 +32,7 @@ namespace ABC.Infrastructure
 
         public async Task<int> InsertSet(List<AmortizationSchedule> amortizations)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
                 var sql = "dbo.InsertAmortizationScheduleSet";
 
@@ -43,7 +48,7 @@ namespace ABC.Infrastructure
 
         public async Task<bool> DeleteByBuyerInfoId(Guid buyerInfoId)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
                 var sql = "delete from AmortizationSchedule where PersonUnitId = @Id";
 

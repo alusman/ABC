@@ -13,8 +13,7 @@ namespace ABC.Services
         private readonly IAmortizationScheduleRepository _amortizationScheduleRepository;
         public AmortizationScheduleService(IAmortizationScheduleRepository amortizationScheduleRepository)
         {
-            if (amortizationScheduleRepository == null) throw new ArgumentNullException();
-            _amortizationScheduleRepository = amortizationScheduleRepository;
+            _amortizationScheduleRepository = amortizationScheduleRepository ?? throw new ArgumentNullException($"{nameof(amortizationScheduleRepository)} is required");
         }
 
         public async Task<IEnumerable<AmortizationSchedule>> GetAmortizationScheduleByBuyerInfoId(Guid buyerInfoId)

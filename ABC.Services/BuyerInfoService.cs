@@ -13,8 +13,7 @@ namespace ABC.Services
 
         public BuyerInfoService(IBuyerInfoRepository buyerInfoRepository)
         {
-            if (buyerInfoRepository == null) throw new ArgumentNullException();
-            _buyerInfoRepository = buyerInfoRepository;
+            _buyerInfoRepository = buyerInfoRepository ?? throw new ArgumentNullException($"{nameof(buyerInfoRepository)} is required");
         }
 
         public async Task<IEnumerable<BuyerInfo>> GetAllBuyerInfo() => await _buyerInfoRepository.GetAll().ConfigureAwait(false);

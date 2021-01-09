@@ -6,16 +6,22 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace ABC.Infrastructure
 {
     public class BuyerInfoRepository : IBuyerInfoRepository
     {
-        private const string CONNECTION_STRING_NAME = "ABC";
+        private readonly IOptions<ConnectionOptions> _options;
+
+        public BuyerInfoRepository(IOptions<ConnectionOptions> options)
+        {
+            _options = options ?? throw new ArgumentNullException($"{nameof(options)} is required");
+        }
 
         public async Task<IEnumerable<BuyerInfo>> GetAll()
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
                 var sql = @"select b.Id, a.*, c.* from Person a
                             join PersonUnit b on a.Id = b.PersonId
@@ -45,7 +51,7 @@ namespace ABC.Infrastructure
 
         public async Task<BuyerInfo> GetById(Guid id)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
                 var sql = $@"select b.Id, a.*, c.* from Person a
                             join PersonUnit b on a.Id = b.PersonId
@@ -80,7 +86,7 @@ namespace ABC.Infrastructure
 
         public async Task<Guid> Insert(BuyerInfo model)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
                 var sql = "dbo.InsertPerson";
 
@@ -141,7 +147,7 @@ namespace ABC.Infrastructure
 
         public async Task<int> Update(BuyerInfo model)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
                 var sql = "dbo.UpdatePerson";
 
@@ -185,7 +191,7 @@ namespace ABC.Infrastructure
 
         public async Task<bool> Delete(Guid id)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.GetConnectionString(CONNECTION_STRING_NAME)))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
                 var query = $"select * from dbo.PersonUnit where Id = @Id";
                 var param = new { Id = id };
