@@ -3,22 +3,29 @@ import { AmortizationSchedule, BuyerInfo, BuyerInfoDefaultValues } from "../mode
 import { BuyerInfoForm } from "./BuyerInfoForm";
 import { Amortization } from "./Amortization";
 import axios from 'axios';
+import { Col, Container, Row } from "react-bootstrap";
+import { ListPage } from "./ListPage";
 
 const BASE_URL = "http://localhost:59161";
 
 export const Home: FC = () => {
   const [buyerInfoState, setBuyerInfoState] = useState<BuyerInfo>(BuyerInfoDefaultValues);
   const [amortizationScheduleState, setAmortizationScheduleState] = useState<AmortizationSchedule[]>([]);
+  const [buyerList, setBuyerList] = useState<BuyerInfo[]>([]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const selectedId = urlParams.get('id');
     
+    refreshBuyerList();
     refreshBuyerInfo(selectedId);
-
-    axios.get(`${BASE_URL}/BuyerAmortization/${selectedId}/schedule`)
-         .then(res => { setAmortizationScheduleState(res.data); });
+    refreshScheduleInfo(selectedId);
   },[]);
+
+  const refreshBuyerList = () => {
+      axios.get(`${BASE_URL}/BuyerAmortization/GetBuyerInfoList`)
+             .then(res => { setBuyerList(res.data); });
+  }
 
   const refreshBuyerInfo = (id: string | null) => {
     if (id) {
@@ -27,10 +34,20 @@ export const Home: FC = () => {
     }
   }
 
+  const refreshScheduleInfo = (id: string | null) => {
+    if (id) {
+      axios.get(`${BASE_URL}/BuyerAmortization/${id}/schedule`)
+         .then(res => { setAmortizationScheduleState(res.data); });
+    }
+  }
+
   const saveHandler = (model: BuyerInfo) => {
       if (model.id === undefined) {
         axios.post(`${BASE_URL}/BuyerAmortization/savebuyerinfo`, {...model})
-        .then(res => { setBuyerInfoState(res.data as BuyerInfo); });
+        .then(res => { 
+          setBuyerInfoState(res.data as BuyerInfo); 
+          refreshBuyerList();
+        });
       } else {
         axios.put(`${BASE_URL}/BuyerAmortization/updatebuyerinfo`, {...model});
       }
@@ -43,7 +60,10 @@ export const Home: FC = () => {
       
       // needs to include id in the dto in case we get an empty list
       if (model.id === undefined && res.data.length > 0) 
+      {
         refreshBuyerInfo(res.data[0].personUnitId ?? null)
+        refreshBuyerList();
+      }
     })
   };
 
@@ -56,18 +76,33 @@ export const Home: FC = () => {
       .then(() => {
         setBuyerInfoState(BuyerInfoDefaultValues);
         setAmortizationScheduleState([]);
+        refreshBuyerList();
       })
+  };
+
+  const selectHandler = (selectedId: string) => {
+    refreshBuyerInfo(selectedId);
+    refreshScheduleInfo(selectedId);
   };
 
   return (
       <>
-          <BuyerInfoForm buyerInfo={buyerInfoState} 
-            onSave={saveHandler} 
-            onBuildSchedule={buildScheduleHandler} 
-            onReset={resetHandler} 
-            onDelete={deleteHandler}
-          />
-          <Amortization amortizations={amortizationScheduleState} />
+        <Container>
+          <Row>
+            <Col sm={4}>
+              <ListPage buyerList={buyerList} onSelect={selectHandler} />
+            </Col>
+            <Col sm={8}>
+              <BuyerInfoForm buyerInfo={buyerInfoState} 
+                onSave={saveHandler} 
+                onBuildSchedule={buildScheduleHandler} 
+                onReset={resetHandler} 
+                onDelete={deleteHandler}
+              />
+              <Amortization amortizations={amortizationScheduleState} />
+            </Col>
+          </Row>
+      </Container>
       </>
   );
 };

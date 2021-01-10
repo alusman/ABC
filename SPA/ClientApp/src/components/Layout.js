@@ -9,7 +9,7 @@ export class Layout extends Component {
     return (
       <React.Fragment>
         <CssBaseline />
-        <Container maxWidth="md">
+        <Container>
           <div class="container-div">
             {this.props.children}
           </div>
