@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using AutoMapper;
+using SPA.DTO.MappingProfile;
 
 namespace SPA
 {
@@ -24,7 +26,13 @@ namespace SPA
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson();
+            services.AddAutoMapper(typeof(Startup));
+
+            // Auto Mapper Configurations  
+            var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

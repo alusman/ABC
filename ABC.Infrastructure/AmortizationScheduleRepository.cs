@@ -22,7 +22,7 @@ namespace ABC.Infrastructure
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_options.Value.DefaultConnection))
             {
-                var sql = "select * from AmortizationSchedule where PersonUnitId = @Id";
+                var sql = "select * from AmortizationSchedule where PersonUnitId = @Id order by Date";
 
                 var param = new { Id = id };
 

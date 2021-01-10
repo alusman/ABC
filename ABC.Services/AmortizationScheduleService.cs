@@ -29,6 +29,7 @@ namespace ABC.Services
             if (buyerInfo.Id == Guid.Empty) return null;
 
             var amortizationSchedule = BuildSchedule(buyerInfo);
+            if (amortizationSchedule == null) return null;
 
             await _amortizationScheduleRepository.InsertSet(amortizationSchedule);
 
@@ -39,37 +40,20 @@ namespace ABC.Services
 
         private List<AmortizationSchedule> BuildSchedule(BuyerInfo model)
         {
-            // initial values
-            var date = model.StartOfPayment;
-            var noOfDays = (date - DateTime.Now).TotalDays;
-            var rate = (decimal)(model.InterestRate / 100);
-            var interest = model.LoanAmount * (decimal)noOfDays * rate / 365;
-            var principal = model.LoanAmount / model.Term;
-            var balance = model.LoanAmount - principal;
-
-            var schedule = new List<AmortizationSchedule>();
-            schedule.Add(new AmortizationSchedule()
+            try
             {
-                PersonUnitId = model.Id,
-                Date = date,
-                Principal = principal,
-                Interest = interest,
-                LoanAmount = model.LoanAmount,
-                NoOfDays = noOfDays,
-                Total = principal + interest,
-                Balance = balance
-            });
+                // initial values
+                var date = model.StartOfPayment;
+                var noOfDays = (date - DateTime.Now).TotalDays;
+                var rate = (decimal)(model.InterestRate / 100);
+                var interest = model.LoanAmount * (decimal)noOfDays * rate / 365;
+                var principal = model.LoanAmount / model.Term;
+                var balance = model.LoanAmount - principal;
 
-            for (var i = 1; i < model.Term; i++)
-            {
-                // succeeding values
-                date = schedule[i - 1].Date.AddMonths(1);
-                noOfDays = (date - schedule[i - 1].Date).TotalDays;
-                interest = schedule[i - 1].Balance * (decimal)noOfDays * rate / 365;
-                balance = schedule[i - 1].Balance - principal;
-
-                var item = new AmortizationSchedule()
+                var schedule = new List<AmortizationSchedule>();
+                schedule.Add(new AmortizationSchedule()
                 {
+                    Id = Guid.NewGuid(),
                     PersonUnitId = model.Id,
                     Date = date,
                     Principal = principal,
@@ -78,12 +62,38 @@ namespace ABC.Services
                     NoOfDays = noOfDays,
                     Total = principal + interest,
                     Balance = balance
-                };
+                });
 
-                schedule.Add(item);
+                for (var i = 1; i < model.Term; i++)
+                {
+                    // succeeding values
+                    date = schedule[i - 1].Date.AddMonths(1);
+                    noOfDays = (date - schedule[i - 1].Date).TotalDays;
+                    interest = schedule[i - 1].Balance * (decimal)noOfDays * rate / 365;
+                    balance = schedule[i - 1].Balance - principal;
+
+                    var item = new AmortizationSchedule()
+                    {
+                        Id = Guid.NewGuid(),
+                        PersonUnitId = model.Id,
+                        Date = date,
+                        Principal = principal,
+                        Interest = interest,
+                        LoanAmount = model.LoanAmount,
+                        NoOfDays = noOfDays,
+                        Total = principal + interest,
+                        Balance = balance
+                    };
+
+                    schedule.Add(item);
+                }
+
+                return schedule;
             }
-
-            return schedule;
+            catch (DivideByZeroException)
+            {
+                return null;
+            }
         }
     }
 }

@@ -11,32 +11,39 @@ export const Home: FC = () => {
   const [amortizationScheduleState, setAmortizationScheduleState] = useState<AmortizationSchedule[]>([]);
 
   useEffect(() => {
-    // TODO: get id from url
-    // const id = 'A8289560-E9E0-48EB-9F45-FBD15B643CE7'
-    // axios.get(BASE_URL + '/BuyerAmortization/' + id)
-    //         .then(res => {
-    //             setBuyerInfoState(res.data as BuyerInfo);
-    //         })
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedId = urlParams.get('id');
+    
+    refreshBuyerInfo(selectedId);
+
+    axios.get(`${BASE_URL}/BuyerAmortization/${selectedId}/schedule`)
+         .then(res => { setAmortizationScheduleState(res.data); });
   },[]);
 
+  const refreshBuyerInfo = (id: string | null) => {
+    if (id) {
+      axios.get(`${BASE_URL}/BuyerAmortization/${id}`)
+      .then(res => { setBuyerInfoState(res.data as BuyerInfo); });
+    }
+  }
+
   const saveHandler = (model: BuyerInfo) => {
-      if (model.id === '') {
-        axios.post(`${BASE_URL}/BuyerAmortization/savebuyerinfo`, { model })
-        .then(res => {
-          setBuyerInfoState(res.data);
-        })
+      if (model.id === undefined) {
+        axios.post(`${BASE_URL}/BuyerAmortization/savebuyerinfo`, {...model})
+        .then(res => { setBuyerInfoState(res.data as BuyerInfo); });
       } else {
-        axios.put(`${BASE_URL}/BuyerAmortization/updatebuyerinfo`, { model })
-        .then(res => {
-          setBuyerInfoState(res.data);
-        })
+        axios.put(`${BASE_URL}/BuyerAmortization/updatebuyerinfo`, {...model});
       }
   };
 
   const buildScheduleHandler = (model: BuyerInfo) => {
-    axios.post(`${BASE_URL}/BuyerAmortization/createschedule`, { model })
+    axios.post(`${BASE_URL}/BuyerAmortization/createschedule`, {...model})
     .then(res => {
       setAmortizationScheduleState(res.data);
+      
+      // needs to include id in the dto in case we get an empty list
+      if (model.id === undefined && res.data.length > 0) 
+        refreshBuyerInfo(res.data[0].personUnitId ?? null)
     })
   };
 
@@ -44,7 +51,7 @@ export const Home: FC = () => {
       if (reset) setAmortizationScheduleState([]);
   };
 
-  const deleteHandler = (id: string) => {
+  const deleteHandler = (id: string | null | undefined) => {
     axios.delete(`${BASE_URL}/BuyerAmortization/delete/${id}`)
       .then(() => {
         setBuyerInfoState(BuyerInfoDefaultValues);

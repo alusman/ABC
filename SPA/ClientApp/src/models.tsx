@@ -1,9 +1,9 @@
 export interface BuyerInfo {
-    id: string;
-    personId: string;
+    id: string | null | undefined;
+    personId: string | null | undefined;
     name: string;
     address: string;
-    unitId: string;
+    unitId: string | null | undefined;
     projectName: string;
     condoUnit: string;
     loanAmount: number;
@@ -13,7 +13,8 @@ export interface BuyerInfo {
 };
 
 export interface AmortizationSchedule {
-    personUnitId: string;
+    id: string | null | undefined;
+    personUnitId: string | null | undefined;
     date: Date;
     principal: number;
     interest: number;
@@ -24,11 +25,11 @@ export interface AmortizationSchedule {
 };
 
 export const BuyerInfoDefaultValues: BuyerInfo = {
-    id: '',
-    personId: '',
+    id: undefined,
+    personId: undefined,
     name: '',
     address: '',
-    unitId: '',
+    unitId: undefined,
     projectName: '',
     condoUnit: '',
     loanAmount: 0,

@@ -1,4 +1,4 @@
-import React, {  FC, useState } from "react";
+import React, {  FC, useEffect, useState } from "react";
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from "@material-ui/core";
@@ -30,11 +30,15 @@ export const BuyerInfoForm:
         onSave: (model: BuyerInfo) => void,
         onBuildSchedule: (model: BuyerInfo) => void,
         onReset: (reset: boolean) => void,
-        onDelete: (id: string) => void,
+        onDelete: (id: string | null | undefined) => void,
     }> = ({ buyerInfo, onSave, onBuildSchedule, onReset, onDelete }) => {
 
     const classes = useStyles();
-    const [state, setState] = useState<BuyerInfo>({...buyerInfo});
+    const [state, setState] = useState<BuyerInfo>(buyerInfo);
+
+    useEffect(() => {
+      if (buyerInfo) setState(buyerInfo);
+    },[buyerInfo]);
 
     const save = () => onSave(state);
     
@@ -42,7 +46,6 @@ export const BuyerInfoForm:
 
     const deleteAll = () => {
         onDelete(state.id);
-        reset();
     }
 
     const reset = () => {
@@ -60,7 +63,7 @@ export const BuyerInfoForm:
         <form className={classes.root} noValidate autoComplete="off">
             <h3>Buyer's Information</h3>
             <div>
-                <TextField disabled value={state.id} id="outlined-read-only-input" label="Buyer ID" InputProps={{ readOnly: true }} variant="outlined" />
+                {/* <TextField disabled value={state.id} id="outlined-read-only-input" InputProps={{ readOnly: true }} variant="outlined" /> */}
                 <TextField required name="name" value={state.name} onChange={handleChange} id="outlined-required" label="Buyer Name" variant="outlined" />
                 <TextField required name="address" value={state.address} onChange={handleChange} id="outlined-required" label="Address" variant="outlined" />
             </div>

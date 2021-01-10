@@ -45,14 +45,14 @@ export const Amortization: FC<{ amortizations: AmortizationSchedule[] }> = ({ am
                     </TableHead>
                     <TableBody>
                         {state.map((row) => (
-                            <TableRow key={row.personUnitId}>
-                                <TableCell component="th" scope="row">{row.date.toLocaleDateString()}</TableCell>
-                                <TableCell align="right">{row.principal}</TableCell>
-                                <TableCell align="right">{row.interest}</TableCell>
-                                <TableCell align="right">{row.total}</TableCell>
-                                <TableCell align="right">{row.balance}</TableCell>
-                                <TableCell align="right">{row.loanAmount}</TableCell>
-                                <TableCell align="center">{row.noOfDays}</TableCell>
+                            <TableRow key={row.id}>
+                                <TableCell component="th" scope="row">{row.date}</TableCell>
+                                <TableCell align="right">{row.principal.toFixed(2)}</TableCell>
+                                <TableCell align="right">{row.interest.toFixed(2)}</TableCell>
+                                <TableCell align="right">{row.total.toFixed(2)}</TableCell>
+                                <TableCell align="right">{row.balance.toFixed(2)}</TableCell>
+                                <TableCell align="right">{row.loanAmount.toFixed(2)}</TableCell>
+                                <TableCell align="center">{row.noOfDays.toFixed(0)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

@@ -78,6 +78,7 @@ namespace ABC.Services
 
                 model.Id = buyerInfoId;
             }
+            // what to do if buyer info was also updated?
 
             // delete any existing records before generating a new schedule
             await _amortizationScheduleService.DeleteSchedule(model.Id).ConfigureAwait(false);
