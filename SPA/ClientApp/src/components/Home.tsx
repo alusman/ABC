@@ -49,7 +49,8 @@ export const Home: FC = () => {
           refreshBuyerList();
         });
       } else {
-        axios.put(`${BASE_URL}/BuyerAmortization/updatebuyerinfo`, {...model});
+        axios.put(`${BASE_URL}/BuyerAmortization/updatebuyerinfo`, {...model})
+        .then(res => { refreshBuyerList(); });
       }
   };
 
