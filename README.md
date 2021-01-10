@@ -6,7 +6,7 @@ HOW TO RUN THE APPLICATION:
 3. Restore database bak file on your database.
 4. Run the app via Visual Studio.
 
-*note: Takes a while to run as it installs all needed packages for React (node_modules).
+* note: Takes a while to run as it installs all needed packages for React (node_modules).
        API accessible via swagger just put '/swagger' in the URL (http://localhost:59161/swagger).
 
 Temporary workaroud for getting an existing record:
@@ -20,7 +20,7 @@ Relevant projects:
 3. ABC.Services
 4. ABC.SPA 
 
-*ignore other projects
+* ignore other projects
 
 
 3rd party libraries used: React Material, Axios, AutoMapper, Dapper, Swashbuckle (Swagger)
